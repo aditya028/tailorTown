@@ -1,9 +1,18 @@
 import React, { useState } from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import { notification } from "antd";
 import { Link } from "react-router-dom";
 
 export default function Signup() {
+  const [api, contextHolder] = notification.useNotification();
+  const openNotificationWithIcon = (type, title = "", desc = "") => {
+    api[type]({
+      message: title,
+      description: desc,
+    });
+  };
+
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -23,22 +32,20 @@ export default function Signup() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        openNotificationWithIcon("success", "Success", "Succeful Registered");
       })
       .catch((error) => {
-        console.error("Error:", error);
+        openNotificationWithIcon("error", "Error", error.message);
       });
-
-    console.log("userRegistered");
-    console.log(email, password);
   };
 
   return (
     <React.Fragment>
+      {contextHolder}
       <Navbar />
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[80vh] lg:py-0 bg-gray-50 dark:bg-gray-900">
-        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0 bg-gray-50 dark:bg-gray-900">
+        <div className=" w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className=" p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Create an account
             </h1>

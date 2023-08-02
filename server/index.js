@@ -51,29 +51,42 @@ app.get("/api/tailors", async (req, res) => {
   const collection = db.collection("tailors");
 
   const data = await collection.find({}).toArray();
-  console.log("Data retrieved:", data);
 
   res.send(data);
 });
 
-app.post("/api/tailors", async (req, res) => {
-  const { title, desc } = req.body;
-  console.log(req.body);
+app.post("/api/tailor", async (req, res) => {
+  const {
+    name,
+    price,
+    orders,
+    category,
+    employees,
+    suitsDesigned,
+    description,
+  } = req.body;
   const collection = db.collection("tailors");
   const result = await collection.insertOne({
-    title: title,
-    desc: desc,
+    name: name,
+    price: price,
+    orders: orders,
+    category: category,
+    employees: employees,
+    suitsDesigned: suitsDesigned,
+    description: description,
   });
   console.log("Document inserted:", result);
   res.send(req.body);
 });
 
-app.get("/api/users", async (req, res) => {
+app.get("/api/login", async (req, res) => {
   const collection = db.collection("users");
-
-  const data = await collection.find({}).toArray();
+  const { email, password } = req.query;
+  const data = await collection
+    .find({ email: email, password: password })
+    .toArray();
   console.log("Data retrieved:", data);
-
+  if (data.length == 0) res.status(400);
   res.send(data);
 });
 

@@ -3,8 +3,24 @@ import Navbar from "../components/navbar";
 import mainImage from "../assets/main.jpg";
 import Card from "../components/card";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function Homepage() {
+  const [tailors, setTailors] = useState();
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/tailors", {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setTailors(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <div>
       <Navbar />
@@ -23,18 +39,9 @@ export default function Homepage() {
         <img className="md:order-2 " src={mainImage} alt="Image" />
       </div>
       <div className="max-w-[1500px] mx-auto px-10 md:my-10 my-0 grid md:grid-cols-4 sm:grid-cols-3 grid-cols-1  gap-4">
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+        {tailors?.map((tailor, id) => (
+          <Card key={id} tailor={tailor} />
+        ))}
       </div>
       <Footer />
     </div>

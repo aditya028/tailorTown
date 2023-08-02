@@ -6,6 +6,7 @@ import Homepage from "./pages/homepage";
 import Signup from "./pages/signup";
 import Login from "./pages/login";
 import Register from "./pages/register";
+import TailorPage from "./pages/tailorPage";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/tailor",
+    element: <TailorPage />,
   },
 ]);
 

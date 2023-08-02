@@ -1,34 +1,55 @@
 import React, { useState } from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { notification } from "antd";
+import axios from "axios";
 
 export default function Login() {
+  const [api, contextHolder] = notification.useNotification();
+  const openNotificationWithIcon = (type, title = "", desc = "") => {
+    api[type]({
+      message: title,
+      description: desc,
+    });
+  };
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    fetch("http://localhost:5000/api/user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: email, password: password }),
-    })
-      .then((response) => response.json())
+    axios
+      .get("http://localhost:5000/api/login", {
+        params: { email: email, password: password },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        if (response.status == 400) {
+          openNotificationWithIcon(
+            "error",
+            "Error",
+            "Email and Password do not match"
+          );
+        } else {
+          console.log(response);
+          navigate("/");
+        }
+        return response.data;
+      })
       .then((data) => {
         console.log(data);
       })
       .catch((error) => {
-        console.error("Error:", error);
+        openNotificationWithIcon("error", "Error", error.message);
       });
-
-    console.log("userRegistered");
-    console.log(email, password);
   };
 
   return (
     <React.Fragment>
+      {contextHolder}
+
       <Navbar />
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-[80vh] lg:py-0 bg-gray-50 dark:bg-gray-900">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -82,10 +103,10 @@ export default function Login() {
             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
               New user{" "}
               <Link
-                to="/register"
+                to="/signup"
                 className="font-medium text-primary-600 hover:underline dark:text-primary-500"
               >
-                Register here
+                Sign up
               </Link>
             </p>
           </div>
