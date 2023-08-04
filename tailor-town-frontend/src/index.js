@@ -26,7 +26,7 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/tailor",
+    path: "/tailor/:data",
     element: <TailorPage />,
   },
 ]);
